@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "luxon": "^3.5.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^4.1.1",
     "vue": "^3.4.29",

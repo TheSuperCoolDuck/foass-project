@@ -8,6 +8,7 @@ export interface NavBar {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { DateTime } from 'luxon'
 
 import Button from '@/components/BaseButton.vue'
 import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
@@ -36,6 +37,7 @@ const configs = ref([
 
 function loginUser() {
   user.loggedIn = true
+  user.lastLoginAt = DateTime.local().toUTC()
 }
 
 function logoutUser() {
