@@ -7,7 +7,12 @@ export interface NavBar {
 </script>
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+
+import Button from '@/components/BaseButton.vue'
 import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
+
+const user = useUserStore()
 
 let id = 0
 
@@ -28,19 +33,27 @@ const configs = ref([
     href: 'fetch'
   }
 ])
+
+function loginUser() {
+  user.loggedIn = true
+}
+
+function logoutUser() {
+  user.loggedIn = false
+}
 </script>
 
 <template>
   <header class="sticky left-0 right-0 top-0 z-10 flex-none">
     <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="#" class="flex items-center space-x-1 rtl:space-x-reverse">
+        <div class="pr-16 flex items-center space-x-1 rtl:space-x-reverse">
           <img :src="ANGRY_EMOJI" alt="Logo" class="h-16 w-16" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
             >FOASS <span class="text-red-500">PROJECT</span></span
           >
-        </a>
-        <div class="w-full md:block md:w-auto">
+        </div>
+        <div class="w-full md:block md:w-auto flex-1">
           <ul
             class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
           >
@@ -53,6 +66,10 @@ const configs = ref([
               </a>
             </li>
           </ul>
+        </div>
+        <div>
+          <Button v-if="!user.loggedIn" @click="loginUser">Login</Button>
+          <Button v-else @click="logoutUser">Logout</Button>
         </div>
       </div>
     </nav>
