@@ -7,7 +7,9 @@ import Footer from '@/components/BaseFooter.vue'
   <div class="flex flex-col min-h-full">
     <NavBar />
     <div class="flex-1">
-      <slot />
+      <slot>
+        <h1 class="text-4xl mt-16 text-center w-full">Oi, You forgot to include content here!</h1>
+      </slot>
     </div>
     <Footer />
   </div>
