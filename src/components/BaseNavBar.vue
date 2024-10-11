@@ -68,8 +68,8 @@ function logoutUser() {
           </ul>
         </div>
         <div>
-          <Button v-if="!user.loggedIn" @click="loginUser">Login</Button>
-          <Button v-else @click="logoutUser">Logout</Button>
+          <Button v-if="!user.loggedIn" @click="loginUser" class="w-20">Login</Button>
+          <Button v-else @click="logoutUser" class="w-20">Logout</Button>
         </div>
       </div>
     </nav>
