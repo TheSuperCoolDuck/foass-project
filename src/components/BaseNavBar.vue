@@ -31,7 +31,7 @@ const configs = ref([
 </script>
 
 <template>
-  <header class="sticky left-0 right-0 top-0 z-10">
+  <header class="sticky left-0 right-0 top-0 z-10 flex-none">
     <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="#" class="flex items-center space-x-1 rtl:space-x-reverse">

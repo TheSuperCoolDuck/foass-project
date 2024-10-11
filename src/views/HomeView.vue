@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import Navbar from '@/components/BaseNavBar.vue'
-import Footer from '@/components/BaseFooter.vue'
+import BaseLayout from '@/components/BaseLayout.vue'
 </script>
 
 <template>
-  <Navbar />
-  <main></main>
-  <Footer />
+  <BaseLayout> </BaseLayout>
 </template>
