@@ -7,7 +7,7 @@ export interface NavBar {
 </script>
 <script setup lang="ts">
 import { ref } from 'vue'
-import ANGRY_LOGO from '@/assets/img/Angry-Emoji.png'
+import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
 
 let id = 0
 
@@ -35,7 +35,7 @@ const configs = ref([
     <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="#" class="flex items-center space-x-1 rtl:space-x-reverse">
-          <img :src="ANGRY_LOGO" alt="Logo" class="h-16 w-16" />
+          <img :src="ANGRY_EMOJI" alt="Logo" class="h-16 w-16" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
             >FOASS <span class="text-red-500">PROJECT</span></span
           >
