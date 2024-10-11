@@ -17,7 +17,7 @@ const lastLogin = computed(() => {
     <hr class="border-gray-200 dark:border-text-700 w-full mx-auto py-2" />
     <div class="grid grid-cols-3 content-center">
       <div />
-      <div class="mx-auto flex">
+      <div class="mx-auto flex space-x-1">
         <span class="text-red-500 dark:text-red-400"> 2024 </span>
         <img :src="DUCK_EMOJI" alt="Duck" class="h-6" />
         <span class="text-red-500 dark:text-red-400"> Daniel Chen </span>
