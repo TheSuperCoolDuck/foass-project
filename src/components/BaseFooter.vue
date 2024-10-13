@@ -13,8 +13,8 @@ const lastLogin = computed(() => {
 </script>
 
 <template>
-  <footer class="bg-white dark:bg-gray-900 m-4 flex-none">
-    <hr class="border-gray-200 dark:border-text-700 w-full mx-auto py-2" />
+  <footer class="bg-white dark:bg-gray-900 pb-4 flex-none">
+    <hr class="border-gray-200 dark:border-gray-700 w-full mx-auto py-2" />
     <div class="grid grid-cols-3 content-center">
       <div />
       <div class="mx-auto flex space-x-1">
