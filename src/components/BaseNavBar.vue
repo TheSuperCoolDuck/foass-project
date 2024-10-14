@@ -11,7 +11,7 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { DateTime } from 'luxon'
 
-import Button from '@/components/BaseButton.vue'
+import BaseButton from '@/components/BaseButton.vue'
 import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
 
 const user = useUserStore()
@@ -81,8 +81,8 @@ function logoutUser() {
           </ul>
         </div>
         <div>
-          <Button v-if="!user.loggedIn" @click="loginUser" class="w-20">Login</Button>
-          <Button v-else @click="logoutUser" class="w-20">Logout</Button>
+          <BaseButton v-if="!user.loggedIn" @click="loginUser" class="w-20">Login</BaseButton>
+          <BaseButton v-else @click="logoutUser" class="w-20">Logout</BaseButton>
         </div>
       </div>
       <hr class="border-gray-200 dark:border-text-700 w-full mx-auto" />
