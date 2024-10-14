@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { DateTime } from 'luxon'
 
 import DUCK_EMOJI from '@/assets/img/Duck-Emoji.png'
 

@@ -1,7 +1,16 @@
+<script lang="ts">
+export interface CallInfo {
+  request: object
+  responseData: string
+  sentAt: Date
+}
+</script>
+
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
+import { useTimeAgo } from '@vueuse/core'
 import { getIty } from '@/services/backend_services'
 
 import BaseLayout from '@/components/BaseLayout.vue'
@@ -15,9 +24,7 @@ const errorMessage = ref('')
 const name = ref('')
 const from = ref('')
 
-const requestData = ref('')
-const responseData = ref('')
-
+const callHistory = ref<CallInfo[]>([])
 const validationRules = computed(() => ({
   name: {
     required: helpers.withMessage('To Name is required!', required)
@@ -47,26 +54,34 @@ async function submitRequest() {
   }
 
   try {
-    let response = await getIty(name.value, from.value)
-
-    // store response/request
-    requestData.value = JSON.stringify({
+    let requestPayload = {
       name: name.value,
       from: from.value
-    })
+    }
 
-    responseData.value = response.data
+    let response = await getIty(requestPayload)
 
-    // untouch form
+    // store response/request
+    let callInfo: CallInfo = {
+      request: {
+        name: name.value,
+        from: from.value
+      },
+      responseData: response.data,
+      sentAt: new Date()
+    }
+
+    callHistory.value.unshift(callInfo)
+
+    // reset form
     v$.value.$reset()
 
     // clear fields
     name.value = ''
     from.value = ''
-  } catch (error) {
-    console.log(error)
+  } catch (error: any) {
     // populate error message
-    errorMessage.value = error.ToString()
+    errorMessage.value = error
   } finally {
     // enable form when finished
     isLoading.value = false
@@ -89,18 +104,19 @@ async function submitRequest() {
         </div>
       </div>
       <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-8 space-y-8 rounded-sm shadow"
-        v-if="requestData"
+        class="bg-white border border-gray-200 dark:border-gray-700 p-4 rounded-sm shadow"
+        v-for="(call, index) in callHistory"
+        :key="index"
       >
-        <h1 class="text-3xl">Request</h1>
-        <span> {{ requestData }} </span>
-      </div>
-      <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-8 space-y-8 rounded-sm shadow"
-        v-if="responseData"
-      >
-        <h1 class="text-3xl">Response</h1>
-        <span> {{ responseData }}</span>
+        <div class="text-xs w-full text-right">{{ useTimeAgo(call.sentAt) }}</div>
+        <span class="text-red-700 font-black text-5xl">
+          {{ call.responseData }}
+        </span>
+        <div class="text-sm font-mono mt-8 ml-8">
+          <div v-for="(keyValuePair, index) in Object.entries(call.request)" :key="index">
+            <span>{{ keyValuePair[0] }}: {{ keyValuePair[1] }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </BaseLayout>

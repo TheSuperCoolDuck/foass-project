@@ -28,6 +28,10 @@ export async function backendRequest(
   }
 }
 
-export function getIty(name: string, from: string) {
-  return backendRequest(`/ity/${name}/${from}`)
+export function getEveryone(request: { from: string }) {
+  return backendRequest(`/everyone/${request.from}`)
+}
+
+export function getIty(request: { name: string; from: string }) {
+  return backendRequest(`/ity/${request.name}/${request.from}`)
 }
