@@ -1,5 +1,6 @@
 <script lang="ts">
 export interface CallInfo {
+  url: string
   request: object
   responseData: string
   sentAt: Date
@@ -63,6 +64,7 @@ async function submitRequest() {
 
     // store response/request
     let callInfo: CallInfo = {
+      url: '/ity/:name/:from',
       request: {
         name: name.value,
         from: from.value
@@ -93,9 +95,9 @@ async function submitRequest() {
   <BaseLayout>
     <div class="mt-4 max-w-[48rem] mx-auto space-y-8">
       <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-8 space-y-8 rounded-sm shadow"
+        class="bg-white border border-gray-200 dark:border-gray-700 p-8 space-y-6 rounded-sm shadow"
       >
-        <h1 class="text-3xl">Form</h1>
+        <h1 class="text-xl">Form</h1>
         <BaseInput label="To Name" v-model="name" :validator="v$.name" />
         <BaseInput label="From Name" v-model="from" :validator="v$.from" />
         <div class="space-y-2">
@@ -108,12 +110,22 @@ async function submitRequest() {
         v-for="(call, index) in callHistory"
         :key="index"
       >
-        <div class="text-xs w-full text-right">{{ useTimeAgo(call.sentAt) }}</div>
-        <span class="text-red-700 font-black text-5xl">
+        <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
+          {{ useTimeAgo(call.sentAt) }}
+        </div>
+        <span class="text-red-700 dark:text-red-600 font-black text-xl">
           {{ call.responseData }}
         </span>
-        <div class="text-sm font-mono mt-8 ml-8">
-          <div v-for="(keyValuePair, index) in Object.entries(call.request)" :key="index">
+        <div class="font-mono mt-2 space-y-1">
+          <div class="text-md text-blue-700">
+            <div>Request Details:</div>
+            <div class="text-xs">{{ call.url }}</div>
+          </div>
+          <div
+            class="ml-8 text-xs"
+            v-for="(keyValuePair, index) in Object.entries(call.request)"
+            :key="index"
+          >
             <span>{{ keyValuePair[0] }}: {{ keyValuePair[1] }}</span>
           </div>
         </div>
