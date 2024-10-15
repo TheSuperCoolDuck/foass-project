@@ -19,8 +19,6 @@ const props = defineProps({
   }
 })
 
-console.log(props.validator.$dirty)
-
 const emit = defineEmits(['update:modelValue'])
 
 const emitChange = (e: any) => {
@@ -31,7 +29,9 @@ const emitChange = (e: any) => {
 
 <template>
   <BaseEditElement :validator="validator">
-    <BaseLabel :is-error="validator.$dirty && validator.$invalid">{{ label }}</BaseLabel>
+    <BaseLabel :is-error="validator && validator.$dirty && validator.$invalid">{{
+      label
+    }}</BaseLabel>
     <input
       type="text"
       :value="modelValue"

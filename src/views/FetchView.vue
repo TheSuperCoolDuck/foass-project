@@ -9,7 +9,7 @@ export interface CallInfo {
 export interface RequestField {
   displayName: string
   fieldName: string
-  required: boolean
+  validation: any
 }
 
 export interface EndpointInfo {
@@ -20,7 +20,7 @@ export interface EndpointInfo {
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useTimeAgo } from '@vueuse/core'
@@ -37,7 +37,10 @@ const endpointList: EndpointInfo[] = [
     requestFields: [
       {
         displayName: 'From Name',
-        fieldName: 'from'
+        fieldName: 'from',
+        validation: {
+          required: helpers.withMessage(`From Name is required`, required)
+        }
       }
     ],
     service: getEveryone
@@ -47,11 +50,17 @@ const endpointList: EndpointInfo[] = [
     requestFields: [
       {
         displayName: 'To Name',
-        fieldName: 'name'
+        fieldName: 'name',
+        validation: {
+          required: helpers.withMessage(`To Name is required`, required)
+        }
       },
       {
         displayName: 'From Name',
-        fieldName: 'from'
+        fieldName: 'from',
+        validation: {
+          required: helpers.withMessage(`From Name is required`, required)
+        }
       }
     ],
     service: getIty
@@ -62,25 +71,40 @@ const isLoading = ref(false)
 const errorMessage = ref('')
 
 const endpoint = ref<EndpointInfo>(endpointList[0])
-const name = ref('')
-const from = ref('')
+const formFields = ref<any>({})
 
 const callHistory = ref<CallInfo[]>([])
-const validationRules = computed(() => ({
-  name: {
-    required: helpers.withMessage('To Name is required!', required)
-  },
-  from: {
-    required: helpers.withMessage('From Name is required!', required)
-  }
-}))
+const validationRules = computed(() => {
+  const _validationRules: any = {}
 
-const v$ = useVuelidate(validationRules, {
-  name,
-  from
+  const requestFields = endpoint.value.requestFields
+  for (let i = 0; i < requestFields.length; i++) {
+    _validationRules[requestFields[i].fieldName] = requestFields[i].validation
+  }
+
+  return _validationRules
 })
 
+let v$ = useVuelidate(validationRules, formFields)
+
+// when the selected endpoint changes
+// reset the form
+watch(endpoint, clearForm)
+
+function clearForm() {
+  // reset form
+  v$.value.$reset()
+
+  // set form default values
+  formFields.value = {}
+  const selectedRequestFields = endpoint.value.requestFields
+  for (let i = 0; i < selectedRequestFields.length; i++) {
+    formFields.value[selectedRequestFields[i].fieldName] = ''
+  }
+}
+
 function selectEndpoint(selectedEndpoint: EndpointInfo) {
+  // set endpoint
   endpoint.value = selectedEndpoint
 }
 
@@ -89,46 +113,37 @@ async function submitRequest() {
   isLoading.value = true
   errorMessage.value = ''
 
-  // touch all form components to show potential errors
+  // // touch all form components to show potential errors
   v$.value.$touch()
 
-  // Return early if form is now valid
+  // // Return early if form is now valid
   if (v$.value.$invalid) {
     isLoading.value = false
     return
   }
 
   try {
-    let requestPayload = {
-      name: name.value,
-      from: from.value
-    }
+    let requestPayload = formFields.value
 
     // call api
-    let response = await getIty(requestPayload)
+    const apiService = endpoint.value.service
+
+    let response = await apiService(requestPayload)
 
     // find replace f-bombs in response so to keep it work-place friendly
     let censoredResponse: string = response.data.replaceAll('fuck', 'duck')
 
     // store response/request
     let callInfo: CallInfo = {
-      url: '/ity/:name/:from',
-      request: {
-        name: name.value,
-        from: from.value
-      },
+      url: endpoint.value.url,
+      request: requestPayload,
       responseData: censoredResponse,
       sentAt: new Date()
     }
 
     callHistory.value.unshift(callInfo)
 
-    // reset form
-    v$.value.$reset()
-
-    // clear fields
-    name.value = ''
-    from.value = ''
+    clearForm()
   } catch (error: any) {
     // populate error message
     errorMessage.value = error
@@ -146,25 +161,30 @@ async function submitRequest() {
       <div
         class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow divide-y divide-solid"
       >
-        <span class="text-xl">API</span>
+        <div class="text-xl">API</div>
         <div v-for="(endpointItem, index) in endpointList" :key="index">
           <div class="my-4 font-mono flex justify-between">
-            <span>
+            <div>
               {{ endpointItem.url }}
-            </span>
+            </div>
             <BaseButton @click.prevent="() => selectEndpoint(endpointItem)">Select</BaseButton>
           </div>
         </div>
       </div>
 
       <!--Form to call api-->
-      <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-8 space-y-6 rounded-sm shadow"
-      >
-        <span class="text-xl">Form</span>
+      <div class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow">
+        <div class="font-mono text-xl mt-2">{{ endpoint.url }}</div>
 
-        <BaseInput label="To Name" v-model="name" :validator="v$.name" />
-        <BaseInput label="From Name" v-model="from" :validator="v$.from" />
+        <BaseInput
+          class="my-8"
+          v-for="(field, index) in endpoint.requestFields"
+          :key="index"
+          :label="field.displayName"
+          v-model="formFields[field.fieldName]"
+          :validator="v$[field.fieldName]"
+        />
+
         <div class="space-y-2">
           <BaseButton :disabled="isLoading" @click.prevent="submitRequest">Submit</BaseButton>
           <InlineErrorBanner v-if:="errorMessage" :message="errorMessage" />
@@ -180,20 +200,20 @@ async function submitRequest() {
         <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
           {{ useTimeAgo(call.sentAt) }}
         </div>
-        <span class="text-red-700 dark:text-red-600 font-black text-xl">
+        <div class="text-red-700 dark:text-red-600 font-black text-xl">
           {{ call.responseData }}
-        </span>
-        <div class="font-mono mt-2 space-y-1">
+        </div>
+        <div class="mt-2 space-y-1 border-t">
           <div class="text-md text-blue-700">
             <div>Request Details:</div>
-            <div class="text-xs ml-2 mb-1">{{ call.url }}</div>
+            <div class="font-mono text-xs mb-1">{{ call.url }}</div>
           </div>
           <div
-            class="ml-4 text-xs"
+            class="ml-4 text-xs font-mono"
             v-for="(keyValuePair, index) in Object.entries(call.request)"
             :key="index"
           >
-            <span>{{ keyValuePair[0] }}: {{ keyValuePair[1] }}</span>
+            {{ keyValuePair[0] }}: {{ keyValuePair[1] }}
           </div>
         </div>
       </div>
