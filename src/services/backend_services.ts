@@ -32,6 +32,18 @@ export function getEveryone(request: { from: string }) {
   return backendRequest(`/everyone/${request.from}`)
 }
 
+export function getEssex(request: { name: string; from: string }) {
+  return backendRequest(`/essex/${request.name}/${request.from}`)
+}
+
+export function getLondon(request: { name: string; from: string }) {
+  return backendRequest(`/london/${request.name}/${request.from}`)
+}
+
+export function getThanks(request: { from: string }) {
+  return backendRequest(`/thanks/${request.from}`)
+}
+
 export function getIty(request: { name: string; from: string }) {
   return backendRequest(`/ity/${request.name}/${request.from}`)
 }
