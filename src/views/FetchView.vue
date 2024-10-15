@@ -60,7 +60,11 @@ async function submitRequest() {
       from: from.value
     }
 
+    // call api
     let response = await getIty(requestPayload)
+
+    // find replace f-bombs in response so to keep it work-place friendly
+    let censoredResponse: string = response.data.replaceAll('fuck', 'duck')
 
     // store response/request
     let callInfo: CallInfo = {
@@ -69,7 +73,7 @@ async function submitRequest() {
         name: name.value,
         from: from.value
       },
-      responseData: response.data,
+      responseData: censoredResponse,
       sentAt: new Date()
     }
 
@@ -119,10 +123,10 @@ async function submitRequest() {
         <div class="font-mono mt-2 space-y-1">
           <div class="text-md text-blue-700">
             <div>Request Details:</div>
-            <div class="text-xs">{{ call.url }}</div>
+            <div class="text-xs ml-2 mb-1">{{ call.url }}</div>
           </div>
           <div
-            class="ml-8 text-xs"
+            class="ml-4 text-xs"
             v-for="(keyValuePair, index) in Object.entries(call.request)"
             :key="index"
           >
