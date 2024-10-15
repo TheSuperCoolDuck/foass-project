@@ -24,7 +24,7 @@ import { computed, ref, watch } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useTimeAgo } from '@vueuse/core'
-import { getIty, getEveryone } from '@/services/backend_services'
+import { getEveryone, getEssex, getLondon, getThanks, getIty } from '@/services/backend_services'
 
 import BaseLayout from '@/components/BaseLayout.vue'
 import BaseInput from '@/components/Inputs/BaseInput.vue'
@@ -44,6 +44,52 @@ const endpointList: EndpointInfo[] = [
       }
     ],
     service: getEveryone
+  },
+  {
+    url: '/essex/:from',
+    requestFields: [
+      {
+        displayName: 'From Name',
+        fieldName: 'from',
+        validation: {
+          required: helpers.withMessage(`From Name is required`, required)
+        }
+      }
+    ],
+    service: getEssex
+  },
+  {
+    url: '/london/:name/:from',
+    requestFields: [
+      {
+        displayName: 'To Name',
+        fieldName: 'name',
+        validation: {
+          required: helpers.withMessage(`To Name is required`, required)
+        }
+      },
+      {
+        displayName: 'From Name',
+        fieldName: 'from',
+        validation: {
+          required: helpers.withMessage(`From Name is required`, required)
+        }
+      }
+    ],
+    service: getLondon
+  },
+  {
+    url: '/thanks/:from',
+    requestFields: [
+      {
+        displayName: 'From Name',
+        fieldName: 'from',
+        validation: {
+          required: helpers.withMessage(`From Name is required`, required)
+        }
+      }
+    ],
+    service: getThanks
   },
   {
     url: '/ity/:name/:from',
@@ -131,7 +177,9 @@ async function submitRequest() {
     let response = await apiService(requestPayload)
 
     // find replace f-bombs in response so to keep it work-place friendly
-    let censoredResponse: string = response.data.replaceAll('fuck', 'duck')
+    let censoredResponse: string = response.data
+    censoredResponse = censoredResponse.replaceAll('fuck', 'duck')
+    censoredResponse = censoredResponse.replaceAll('Fuck', 'duck')
 
     // store response/request
     let callInfo: CallInfo = {
@@ -200,11 +248,11 @@ async function submitRequest() {
         <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
           {{ useTimeAgo(call.sentAt) }}
         </div>
-        <div class="text-red-700 dark:text-red-600 font-black text-xl">
+        <div class="font-mono text-xl text-red-700 dark:text-red-600">
           {{ call.responseData }}
         </div>
         <div class="mt-2 space-y-1 border-t">
-          <div class="text-md text-blue-700">
+          <div class="text-md text-blue-700 dark:text-blue-600 mt-2">
             <div>Request Details:</div>
             <div class="font-mono text-xs mb-1">{{ call.url }}</div>
           </div>
