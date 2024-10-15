@@ -5,6 +5,18 @@ export interface CallInfo {
   responseData: string
   sentAt: Date
 }
+
+export interface RequestField {
+  displayName: string
+  fieldName: string
+  required: boolean
+}
+
+export interface EndpointInfo {
+  url: string
+  requestFields: RequestField[]
+  service: (request: any) => Promise<any>
+}
 </script>
 
 <script setup lang="ts">
@@ -12,16 +24,44 @@ import { computed, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useTimeAgo } from '@vueuse/core'
-import { getIty } from '@/services/backend_services'
+import { getIty, getEveryone } from '@/services/backend_services'
 
 import BaseLayout from '@/components/BaseLayout.vue'
 import BaseInput from '@/components/Inputs/BaseInput.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import InlineErrorBanner from '@/components/InlineErrorBanner.vue'
 
+const endpointList: EndpointInfo[] = [
+  {
+    url: '/everyone/:from',
+    requestFields: [
+      {
+        displayName: 'From Name',
+        fieldName: 'from'
+      }
+    ],
+    service: getEveryone
+  },
+  {
+    url: '/ity/:name/:from',
+    requestFields: [
+      {
+        displayName: 'To Name',
+        fieldName: 'name'
+      },
+      {
+        displayName: 'From Name',
+        fieldName: 'from'
+      }
+    ],
+    service: getIty
+  }
+]
+
 const isLoading = ref(false)
 const errorMessage = ref('')
 
+const endpoint = ref<EndpointInfo>(endpointList[0])
 const name = ref('')
 const from = ref('')
 
@@ -39,6 +79,10 @@ const v$ = useVuelidate(validationRules, {
   name,
   from
 })
+
+function selectEndpoint(selectedEndpoint: EndpointInfo) {
+  endpoint.value = selectedEndpoint
+}
 
 async function submitRequest() {
   // Disable form while getting response
@@ -98,10 +142,27 @@ async function submitRequest() {
 <template>
   <BaseLayout>
     <div class="mt-4 max-w-[48rem] mx-auto space-y-8">
+      <!-- List of Endpoints-->
+      <div
+        class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow divide-y divide-solid"
+      >
+        <span class="text-xl">API</span>
+        <div v-for="(endpointItem, index) in endpointList" :key="index">
+          <div class="my-4 font-mono flex justify-between">
+            <span>
+              {{ endpointItem.url }}
+            </span>
+            <BaseButton @click.prevent="() => selectEndpoint(endpointItem)">Select</BaseButton>
+          </div>
+        </div>
+      </div>
+
+      <!--Form to call api-->
       <div
         class="bg-white border border-gray-200 dark:border-gray-700 p-8 space-y-6 rounded-sm shadow"
       >
-        <h1 class="text-xl">Form</h1>
+        <span class="text-xl">Form</span>
+
         <BaseInput label="To Name" v-model="name" :validator="v$.name" />
         <BaseInput label="From Name" v-model="from" :validator="v$.from" />
         <div class="space-y-2">
@@ -109,6 +170,8 @@ async function submitRequest() {
           <InlineErrorBanner v-if:="errorMessage" :message="errorMessage" />
         </div>
       </div>
+
+      <!-- History of API Calls-->
       <div
         class="bg-white border border-gray-200 dark:border-gray-700 p-4 rounded-sm shadow"
         v-for="(call, index) in callHistory"
