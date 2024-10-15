@@ -31,13 +31,9 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log('widjwdo')
-
   // check if login is required for this route
-  console.log(to)
   const loginRequired = to.matched.some((route) => route.meta.loginRequired)
 
-  console.log(loginRequired)
   if (!loginRequired) {
     return next()
   }
