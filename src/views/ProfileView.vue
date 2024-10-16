@@ -12,10 +12,9 @@ const user = useUserStore()
 <template>
   <BaseLayout>
     <div class="text-center w-full mt-4 max-w-[32rem] mx-auto">
-      <BaseCard class="pb-32">
+      <BaseCard class="pb-32 w-full">
         <img :src="SUNGLASSES_EMOJI" alt="Logo" class="h-64 w-64 rounded-full mx-auto" />
-        <p class="text-5xl mb-2">{{ user.username }}</p>
-        <!-- <p class="text-xl">da.chen@alfred.org.au</p> -->
+        <div class="text-4xl w-full text-center">{{ user.username }}</div>
       </BaseCard>
     </div>
   </BaseLayout>
