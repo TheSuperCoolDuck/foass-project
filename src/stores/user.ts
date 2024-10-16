@@ -6,8 +6,9 @@ export const useUserStore = defineStore(
   () => {
     const loggedIn = ref(false)
     const lastLoginAt = ref<Date | undefined>(undefined)
+    const username = ref('')
 
-    return { loggedIn, lastLoginAt }
+    return { loggedIn, lastLoginAt, username }
   },
   {
     persist: true

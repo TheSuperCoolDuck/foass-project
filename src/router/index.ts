@@ -23,6 +23,11 @@ const router = createRouter({
       component: () => import('@/views/FetchView.vue')
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue')
+    },
+    {
       path: '/403',
       name: '403-forbidden',
       component: () => import('@/views/_403Forbidden.vue')

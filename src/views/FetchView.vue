@@ -132,7 +132,7 @@ const validationRules = computed(() => {
   return _validationRules
 })
 
-let v$ = useVuelidate(validationRules, formFields)
+const v$ = useVuelidate(validationRules, formFields)
 
 // when the selected endpoint changes
 // reset the form
