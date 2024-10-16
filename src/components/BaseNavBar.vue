@@ -49,9 +49,7 @@ const filteredConfigs = computed(() => {
 const showMobileMenu = ref(false)
 
 function loginUser() {
-  user.loggedIn = true
-  user.lastLoginAt = new Date()
-  window.location.reload()
+  window.location.href = '/login'
 }
 
 function logoutUser() {

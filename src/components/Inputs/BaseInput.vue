@@ -9,6 +9,10 @@ const props = defineProps({
     type: [String, Number],
     default: ''
   },
+  type: {
+    type: String,
+    default: 'text'
+  },
   label: {
     type: String,
     required: false
@@ -33,7 +37,7 @@ const emitChange = (e: any) => {
       label
     }}</BaseLabel>
     <input
-      type="text"
+      :type="type"
       :value="modelValue"
       @input="emitChange"
       @blur="validator && validator.$touch && validator.$touch()"
