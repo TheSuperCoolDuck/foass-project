@@ -70,7 +70,8 @@ function toggleShowMenu() {
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto pt-2 px-4">
         <div class="pr-16 flex items-center space-x-1 rtl:space-x-reverse">
           <img :src="DUCK_EMOJI" alt="Logo" class="h-16 w-16" />
-          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white hidden md:block"
             >DOASS <span class="text-red-500">PROJECT</span></span
           >
         </div>
@@ -83,17 +84,17 @@ function toggleShowMenu() {
             </li>
           </ul>
         </div>
-        <div>
+        <div class="flex items-center space-x-4">
           <BaseButton v-if="!user.loggedIn" @click="loginUser" class="w-20 text-right"
             >Login</BaseButton
           >
           <BaseButton v-else @click="logoutUser" class="w-20 text-right">Logout</BaseButton>
-        </div>
-        <div class="md:hidden">
-          <IconBars
-            class="hover:cursor-pointer text-gray-500 hover:text-gray-300 dark:text-gray-300 dark:hover:text-gray-500"
-            @click="toggleShowMenu"
-          />
+          <div class="md:hidden">
+            <IconBars
+              class="w-8 h-8 hover:cursor-pointer text-gray-500 hover:text-gray-300 dark:text-gray-300 dark:hover:text-gray-500"
+              @click="toggleShowMenu"
+            />
+          </div>
         </div>
       </div>
       <div class="md:hidden border-t shadow">
