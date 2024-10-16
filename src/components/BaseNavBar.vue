@@ -9,12 +9,14 @@ export interface NavBar {
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { RouterLink, useRouter } from 'vue-router'
 
 import BaseButton from '@/components/BaseButton.vue'
 import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
 import IconBars from '@/components/icons/IconBars.vue'
 
 const user = useUserStore()
+const router = useRouter()
 
 let id = 0
 
@@ -49,12 +51,12 @@ const filteredConfigs = computed(() => {
 const showMobileMenu = ref(false)
 
 function loginUser() {
-  window.location.href = '/login'
+  router.push('/login')
 }
 
 function logoutUser() {
   user.loggedIn = false
-  window.location.reload()
+  router.push('/login')
 }
 
 function toggleShowMenu() {
@@ -75,9 +77,9 @@ function toggleShowMenu() {
         <div class="hidden md:block flex-1">
           <ul class="flex space-x-8 font-medium">
             <li v-for="config in filteredConfigs" :key="config.id">
-              <a :href="config.href" class="hover:text-red-700 dark:text-red-600">
+              <RouterLink :to="config.href" class="hover:text-red-700 dark:text-red-600">
                 {{ config.label }}
-              </a>
+              </RouterLink>
             </li>
           </ul>
         </div>
@@ -97,9 +99,9 @@ function toggleShowMenu() {
       <div class="md:hidden border-t shadow">
         <ul v-if="showMobileMenu">
           <li v-for="config in filteredConfigs" :key="config.id" class="py-3 px-2 hover:bg-gray-50">
-            <a :href="config.href" class="block">
+            <RouterLink :to="config.href" class="block">
               {{ config.label }}
-            </a>
+            </RouterLink>
           </li>
         </ul>
       </div>

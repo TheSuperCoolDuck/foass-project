@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, helpers } from '@vuelidate/validators'
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 
 import BaseCard from '@/components/BaseCard.vue'
 import BaseInput from '@/components/Inputs/BaseInput.vue'
@@ -11,6 +12,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import DUCK_EMOJI from '@/assets/img/Duck-Emoji.png'
 
 const user = useUserStore()
+const router = useRouter()
 
 const username = ref('')
 const password = ref('')
@@ -39,7 +41,7 @@ function login() {
   user.username = username.value
 
   // redirect to home page
-  window.location.href = '/'
+  router.push('/')
 }
 </script>
 
