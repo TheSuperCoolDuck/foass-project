@@ -240,28 +240,30 @@ async function submitRequest() {
       </div>
 
       <!-- History of API Calls-->
-      <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-4 rounded-sm shadow"
-        v-for="(call, index) in callHistory"
-        :key="index"
-      >
-        <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
-          {{ useTimeAgo(call.sentAt) }}
-        </div>
-        <div class="font-mono text-xl text-red-700 dark:text-red-600">
-          {{ call.responseData }}
-        </div>
-        <div class="mt-2 space-y-1 border-t">
-          <div class="text-md text-blue-700 dark:text-blue-600 mt-2">
-            <div>Request Details:</div>
-            <div class="font-mono text-xs mb-1">{{ call.url }}</div>
+      <div class="space-y-2">
+        <div
+          class="bg-white border border-gray-200 dark:border-gray-700 p-4 rounded-sm shadow"
+          v-for="(call, index) in callHistory"
+          :key="index"
+        >
+          <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
+            {{ useTimeAgo(call.sentAt) }}
           </div>
-          <div
-            class="ml-4 text-xs font-mono"
-            v-for="(keyValuePair, index) in Object.entries(call.request)"
-            :key="index"
-          >
-            {{ keyValuePair[0] }}: {{ keyValuePair[1] }}
+          <div class="font-mono text-xl text-red-700 dark:text-red-600">
+            {{ call.responseData }}
+          </div>
+          <div class="mt-2 space-y-1 border-t">
+            <div class="text-md text-blue-700 dark:text-blue-600 mt-2">
+              <div>Request Details:</div>
+              <div class="font-mono text-xs mb-1">{{ call.url }}</div>
+            </div>
+            <div
+              class="ml-4 text-xs font-mono"
+              v-for="(keyValuePair, index) in Object.entries(call.request)"
+              :key="index"
+            >
+              {{ keyValuePair[0] }}: {{ keyValuePair[1] }}
+            </div>
           </div>
         </div>
       </div>
