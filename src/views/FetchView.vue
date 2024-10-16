@@ -26,6 +26,7 @@ import { required, helpers } from '@vuelidate/validators'
 import { useTimeAgo } from '@vueuse/core'
 import { getEveryone, getEssex, getLondon, getThanks, getIty } from '@/services/backend_services'
 
+import BaseCard from '@/components/BaseCard.vue'
 import BaseLayout from '@/components/BaseLayout.vue'
 import BaseInput from '@/components/Inputs/BaseInput.vue'
 import BaseButton from '@/components/BaseButton.vue'
@@ -206,9 +207,7 @@ async function submitRequest() {
   <BaseLayout>
     <div class="mt-4 max-w-[48rem] mx-auto space-y-8">
       <!-- List of Endpoints-->
-      <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow divide-y divide-solid"
-      >
+      <BaseCard class="divide-y divide-solid">
         <div class="text-xl">API</div>
         <div v-for="(endpointItem, index) in endpointList" :key="index">
           <div class="my-4 font-mono flex justify-between">
@@ -218,10 +217,10 @@ async function submitRequest() {
             <BaseButton @click.prevent="() => selectEndpoint(endpointItem)">Select</BaseButton>
           </div>
         </div>
-      </div>
+      </BaseCard>
 
       <!--Form to call api-->
-      <div class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow">
+      <BaseCard>
         <div class="font-mono text-xl mt-2">{{ endpoint.url }}</div>
 
         <BaseInput
@@ -237,15 +236,11 @@ async function submitRequest() {
           <BaseButton :disabled="isLoading" @click.prevent="submitRequest">Submit</BaseButton>
           <InlineErrorBanner v-if:="errorMessage" :message="errorMessage" />
         </div>
-      </div>
+      </BaseCard>
 
       <!-- History of API Calls-->
       <div class="space-y-2">
-        <div
-          class="bg-white border border-gray-200 dark:border-gray-700 p-4 rounded-sm shadow"
-          v-for="(call, index) in callHistory"
-          :key="index"
-        >
+        <BaseCard v-for="(call, index) in callHistory" :key="index">
           <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
             {{ useTimeAgo(call.sentAt) }}
           </div>
@@ -265,7 +260,7 @@ async function submitRequest() {
               {{ keyValuePair[0] }}: {{ keyValuePair[1] }}
             </div>
           </div>
-        </div>
+        </BaseCard>
       </div>
     </div>
   </BaseLayout>
