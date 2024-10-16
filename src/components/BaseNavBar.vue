@@ -12,6 +12,7 @@ import { useUserStore } from '@/stores/user'
 
 import BaseButton from '@/components/BaseButton.vue'
 import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
+import IconBars from '@/components/icons/IconBars.vue'
 
 const user = useUserStore()
 
@@ -45,6 +46,8 @@ const filteredConfigs = computed(() => {
   return configs.value
 })
 
+const showMobileMenu = ref(false)
+
 function loginUser() {
   user.loggedIn = true
   user.lastLoginAt = new Date()
@@ -52,6 +55,10 @@ function loginUser() {
 
 function logoutUser() {
   user.loggedIn = false
+}
+
+function toggleShowMenu() {
+  showMobileMenu.value = !showMobileMenu.value
 }
 </script>
 
@@ -65,24 +72,36 @@ function logoutUser() {
             >FOASS <span class="text-red-500">PROJECT</span></span
           >
         </div>
-        <div class="hidden w-full md:block md:w-auto flex-1">
-          <ul
-            class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
-          >
+        <div class="hidden md:block flex-1">
+          <ul class="flex space-x-8 font-medium">
             <li v-for="config in filteredConfigs" :key="config.id">
-              <a
-                :href="config.href"
-                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-red-700 md:p-0 dark:text-white md:dark:hover:text-red-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
+              <a :href="config.href" class="hover:text-red-700 dark:text-red-600">
                 {{ config.label }}
               </a>
             </li>
           </ul>
         </div>
         <div>
-          <BaseButton v-if="!user.loggedIn" @click="loginUser" class="w-20">Login</BaseButton>
-          <BaseButton v-else @click="logoutUser" class="w-20">Logout</BaseButton>
+          <BaseButton v-if="!user.loggedIn" @click="loginUser" class="w-20 text-right"
+            >Login</BaseButton
+          >
+          <BaseButton v-else @click="logoutUser" class="w-20 text-right">Logout</BaseButton>
         </div>
+        <div class="md:hidden">
+          <IconBars
+            class="hover:cursor-pointer text-gray-500 hover:text-gray-300 dark:text-gray-300 dark:hover:text-gray-500"
+            @click="toggleShowMenu"
+          />
+        </div>
+      </div>
+      <div class="md:hidden border-t shadow">
+        <ul v-if="showMobileMenu">
+          <li v-for="config in filteredConfigs" :key="config.id" class="py-3 px-2 hover:bg-gray-50">
+            <a :href="config.href" class="block">
+              {{ config.label }}
+            </a>
+          </li>
+        </ul>
       </div>
       <hr class="border-gray-200 dark:border-text-700 w-full mx-auto" />
     </nav>
