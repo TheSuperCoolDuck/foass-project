@@ -51,10 +51,12 @@ const showMobileMenu = ref(false)
 function loginUser() {
   user.loggedIn = true
   user.lastLoginAt = new Date()
+  window.location.reload()
 }
 
 function logoutUser() {
   user.loggedIn = false
+  window.location.reload()
 }
 
 function toggleShowMenu() {
