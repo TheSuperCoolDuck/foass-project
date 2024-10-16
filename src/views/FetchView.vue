@@ -26,6 +26,7 @@ import { required, helpers } from '@vuelidate/validators'
 import { useTimeAgo } from '@vueuse/core'
 import { getEveryone, getEssex, getLondon, getThanks, getIty } from '@/services/backend_services'
 
+import BaseCard from '@/components/BaseCard.vue'
 import BaseLayout from '@/components/BaseLayout.vue'
 import BaseInput from '@/components/Inputs/BaseInput.vue'
 import BaseButton from '@/components/BaseButton.vue'
@@ -206,9 +207,7 @@ async function submitRequest() {
   <BaseLayout>
     <div class="mt-4 max-w-[48rem] mx-auto space-y-8">
       <!-- List of Endpoints-->
-      <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow divide-y divide-solid"
-      >
+      <BaseCard class="divide-y divide-solid">
         <div class="text-xl">API</div>
         <div v-for="(endpointItem, index) in endpointList" :key="index">
           <div class="my-4 font-mono flex justify-between">
@@ -218,10 +217,10 @@ async function submitRequest() {
             <BaseButton @click.prevent="() => selectEndpoint(endpointItem)">Select</BaseButton>
           </div>
         </div>
-      </div>
+      </BaseCard>
 
       <!--Form to call api-->
-      <div class="bg-white border border-gray-200 dark:border-gray-700 p-8 rounded-sm shadow">
+      <BaseCard>
         <div class="font-mono text-xl mt-2">{{ endpoint.url }}</div>
 
         <BaseInput
@@ -237,33 +236,31 @@ async function submitRequest() {
           <BaseButton :disabled="isLoading" @click.prevent="submitRequest">Submit</BaseButton>
           <InlineErrorBanner v-if:="errorMessage" :message="errorMessage" />
         </div>
-      </div>
+      </BaseCard>
 
       <!-- History of API Calls-->
-      <div
-        class="bg-white border border-gray-200 dark:border-gray-700 p-4 rounded-sm shadow"
-        v-for="(call, index) in callHistory"
-        :key="index"
-      >
-        <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
-          {{ useTimeAgo(call.sentAt) }}
-        </div>
-        <div class="font-mono text-xl text-red-700 dark:text-red-600">
-          {{ call.responseData }}
-        </div>
-        <div class="mt-2 space-y-1 border-t">
-          <div class="text-md text-blue-700 dark:text-blue-600 mt-2">
-            <div>Request Details:</div>
-            <div class="font-mono text-xs mb-1">{{ call.url }}</div>
+      <div class="space-y-2">
+        <BaseCard v-for="(call, index) in callHistory" :key="index">
+          <div class="text-xs w-full text-right text-gray-500 dark:text-gray-400">
+            {{ useTimeAgo(call.sentAt) }}
           </div>
-          <div
-            class="ml-4 text-xs font-mono"
-            v-for="(keyValuePair, index) in Object.entries(call.request)"
-            :key="index"
-          >
-            {{ keyValuePair[0] }}: {{ keyValuePair[1] }}
+          <div class="font-mono text-xl text-red-700 dark:text-red-600">
+            {{ call.responseData }}
           </div>
-        </div>
+          <div class="mt-2 space-y-1 border-t">
+            <div class="text-md text-blue-700 dark:text-blue-600 mt-2">
+              <div>Request Details:</div>
+              <div class="font-mono text-xs mb-1">{{ call.url }}</div>
+            </div>
+            <div
+              class="ml-4 text-xs font-mono"
+              v-for="(keyValuePair, index) in Object.entries(call.request)"
+              :key="index"
+            >
+              {{ keyValuePair[0] }}: {{ keyValuePair[1] }}
+            </div>
+          </div>
+        </BaseCard>
       </div>
     </div>
   </BaseLayout>
