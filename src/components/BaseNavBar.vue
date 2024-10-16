@@ -11,7 +11,7 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 
 import BaseButton from '@/components/BaseButton.vue'
-import ANGRY_EMOJI from '@/assets/img/Angry-Emoji.png'
+import DUCK_EMOJI from '@/assets/img/Duck-Emoji.png'
 import IconBars from '@/components/icons/IconBars.vue'
 
 const user = useUserStore()
@@ -69,9 +69,9 @@ function toggleShowMenu() {
     <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto pt-2 px-4">
         <div class="pr-16 flex items-center space-x-1 rtl:space-x-reverse">
-          <img :src="ANGRY_EMOJI" alt="Logo" class="h-16 w-16" />
+          <img :src="DUCK_EMOJI" alt="Logo" class="h-16 w-16" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-            >FOASS <span class="text-red-500">PROJECT</span></span
+            >DOASS <span class="text-red-500">PROJECT</span></span
           >
         </div>
         <div class="hidden md:block flex-1">
