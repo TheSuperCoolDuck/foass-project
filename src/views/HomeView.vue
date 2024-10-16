@@ -4,11 +4,11 @@ import BaseLayout from '@/components/BaseLayout.vue'
 
 <template>
   <BaseLayout>
-    <div class="px-8 mt-8">
-      <h1 class="text-5xl font-medium">
+    <div class="px-4 mt-8">
+      <h1 class="md:text-5xl text-3xl font-medium">
         Welcome to DOASS
         <br class="md:hidden" />
-        Duck Off As A Service)
+        (Duck Off As A Service)
       </h1>
     </div>
   </BaseLayout>
